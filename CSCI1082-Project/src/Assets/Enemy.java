@@ -9,9 +9,9 @@ public class Enemy {
 	
 	public Enemy() {
 		health = 200;
-		weapon = null;
+		weapon = "Club";
 		damage = 10;
-		enemyclass = null;
+		enemyclass = "Ogre";
 	}
 	
 	public Enemy (int health, String weapon, int damage, String playerclass) {

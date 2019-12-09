@@ -34,7 +34,7 @@ public class GameGui extends JFrame implements ActionListener{
 	private JButton option2 = new JButton("Punch");
 	private JButton option3 = new JButton("Kick");
 	private JButton option4 = new JButton("Guard");
-	private JButton exitBtn = new JButton("Exit");
+	private JButton exitBtn = new JButton("Return");
 	
 	private Dimension btnSize = new Dimension(100,50);
 
@@ -54,8 +54,8 @@ public class GameGui extends JFrame implements ActionListener{
 	private JPanel infoPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
 	private JPanel exitPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
 
-	private Player player = new Player(100, 50, "Long Sword", "Warrior");
-	private Enemy enemy = new Enemy(200, "Club", 10, "Ogre");
+	private Player player = new Player();
+	private Enemy enemy = new Enemy();
 	
 	private Random rand = new Random();
 	
@@ -284,8 +284,6 @@ public class GameGui extends JFrame implements ActionListener{
 				exitPanel.setVisible(true);
 			}
 			
-			
-			
 		} else if (callingBtn.equals("Punch")) {
 			damage = rand.nextInt(20);
 			taken = rand.nextInt(enemy.getDamage());
@@ -385,7 +383,6 @@ public class GameGui extends JFrame implements ActionListener{
 			taken = 0;
 			
 			playerHealth -= taken;
-			enemyHealth -= damage;
 			
 			damage = 50;
 			enemyDamage = 20;
@@ -418,9 +415,28 @@ public class GameGui extends JFrame implements ActionListener{
 			}
 		}
 		
-		else if (callingBtn.equals("Exit")) {
-			System.exit(EXIT_ON_CLOSE);
+		else if (callingBtn.equals("Return")) {
+			exitPanel.setVisible(false);
+			textPanel.setVisible(false);
+			menuPanel.setVisible(true);
+			label1.setVisible(true);
+			player = new Player();
+			playerInfo.setText("");
+			playerInfo.append(player.toString());
+			enemy = new Enemy();
+			enemyInfo.setText("");
+			enemyInfo.append(enemy.toString());
+			damage = 0;
+			taken = 0;
+			block = 0;
+			playerHealth = player.health;
+			enemyHealth = enemy.health;
+			playerDamage = player.attackdmg;
+			enemyDamage = enemy.damage;
+			playerWeapon = player.weapon;
+			playerClass = player.playerclass;
+			enemyWeapon = enemy.weapon;
+			enemyClass = enemy.enemyclass;
 		}
-
 	}
 }
