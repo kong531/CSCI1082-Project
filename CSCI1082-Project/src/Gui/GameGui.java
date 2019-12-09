@@ -22,7 +22,7 @@ public class GameGui extends JFrame implements ActionListener{
 	private Font font1 = new Font("", Font.BOLD, 40);
 
 	private JButton startBtn = new JButton("Start");
-	private JButton btn1 = new JButton("Fight!");
+	private JButton btn1 = new JButton("Fight!");  
 	private JButton option1 = new JButton("Stab");
 	private JButton option2 = new JButton("Punch");
 	private JButton option3 = new JButton("Shoot");

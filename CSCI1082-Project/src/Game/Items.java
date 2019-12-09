@@ -16,7 +16,7 @@ public class Items {
 
 	public void setWeapon(String weapon) {
 		Weapon = weapon;
-	}
+	} 
 
 	public String getWaterBottle() {
 		return waterBottle;
