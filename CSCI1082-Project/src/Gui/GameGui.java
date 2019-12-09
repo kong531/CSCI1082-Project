@@ -230,7 +230,7 @@ Random rand = new Random();
 			newPanel.setVisible(true);
 			label1.setVisible(false);
 			textPanel.setVisible(true);
-			int damageGiven = rand.nextInt(myAttackDamage);
+			int damageGiven = rand.nextInt(myAttackDamage);              
 			int health = enemy.getHealth() - damageGiven;
 			enemy.setHealth(health);
 			output.append("Enemy HP: ");
