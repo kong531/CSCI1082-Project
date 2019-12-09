@@ -24,7 +24,7 @@ public class GameGui extends JFrame implements ActionListener{
 
 	private Font font = new Font("", Font.BOLD, 64);
 	private Font font1 = new Font("", Font.PLAIN, 15);
-
+	
 	private JButton startBtn = new JButton("Start");
 	private JButton quitBtn = new JButton("Quit");
 	private JButton readyBtn = new JButton("Ready!");

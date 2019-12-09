@@ -39,7 +39,7 @@ public class Enemy {
 	@Override
 	public String toString() {
 		
-		String playerInfo = "\n[Enemy's Stats]"
+		String playerInfo = "[Enemy's Stats]"
 						+ "\n------------------------------\n"
 						+ "Health points: " + health
 						+ "Weapon type: " + weapon
