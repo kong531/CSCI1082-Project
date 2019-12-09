@@ -8,6 +8,7 @@ import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Random;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -16,6 +17,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
+import Assets.Enemy;
 import Assets.Player;
 
 public class GameGui extends JFrame implements ActionListener{
@@ -30,12 +32,13 @@ public class GameGui extends JFrame implements ActionListener{
 	private JButton readyBtn = new JButton("Ready!");
 	private JButton option1 = new JButton("Stab");
 	private JButton option2 = new JButton("Punch");
-	private JButton option3 = new JButton("Shoot");
+	private JButton option3 = new JButton("Kick");
 	private JButton option4 = new JButton("Guard");
+	private JButton exitBtn = new JButton("Exit");
 	
 	private Dimension btnSize = new Dimension(100,50);
 
-	private JTextArea output = new JTextArea();
+	public JTextArea output = new JTextArea(10, 10);
 	private JTextArea playerInfo = new JTextArea();
 	private JTextArea enemyInfo = new JTextArea();
 	private JTextArea info = new JTextArea();
@@ -49,10 +52,25 @@ public class GameGui extends JFrame implements ActionListener{
 	private JPanel textPanel = new JPanel(new GridLayout(1,1));
 	private JPanel prepPanel = new JPanel(new GridLayout(2, 1));
 	private JPanel infoPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-	
-	private Combat combat = new Combat();
+	private JPanel exitPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+
 	private Player player = new Player(100, 50, "Long Sword", "Warrior");
+	private Enemy enemy = new Enemy(200, "Club", 10, "Ogre");
 	
+	private Random rand = new Random();
+	
+	private int damage = 0;
+	private int taken = 0;
+	private int block = 0;
+	public int playerHealth = player.health;
+	public int enemyHealth = enemy.health;
+	public int playerDamage = player.attackdmg;
+	public int enemyDamage = enemy.damage;
+	public String playerWeapon = player.weapon;
+	public String playerClass = player.playerclass;
+	public String enemyWeapon = enemy.weapon;
+	public String enemyClass = enemy.enemyclass;
+
 	public GameGui(String title) {
 		super(title);
 		setSize(1000, 700);
@@ -69,13 +87,12 @@ public class GameGui extends JFrame implements ActionListener{
 		createPlayerInfo();
 		createEnemyInfo();
 		createInfoPanel();
+		createExitPanel();
 		addPanelsToFrame();
 		additonalSettings();
 		addActionListeners();
 
 	}
-
-	
 
 	private void createTopPanel() {
 		topPanel.setBackground(Color.black);
@@ -93,8 +110,10 @@ public class GameGui extends JFrame implements ActionListener{
 		botPanel.add(menuPanel);
 		botPanel.add(newPanel);
 		botPanel.add(prepPanel);
+		botPanel.add(exitPanel);
 		newPanel.setVisible(false);
 		prepPanel.setVisible(false);
+		exitPanel.setVisible(false);
 	}
 	
 	private void createPrepPanel() {
@@ -141,9 +160,10 @@ public class GameGui extends JFrame implements ActionListener{
 
 	private void createTextPanel() {
 		textPanel.add(playerInfo);
-		playerInfo.setPreferredSize(new Dimension(320,330));
+		playerInfo.setPreferredSize(new Dimension(320,200));
 		playerInfo.setForeground(Color.white);
 		textPanel.add(scroll, BorderLayout.EAST);
+		
 		textPanel.add(enemyInfo);
 		enemyInfo.setForeground(Color.white);
 	}
@@ -157,7 +177,7 @@ public class GameGui extends JFrame implements ActionListener{
 	private void createEnemyInfo() {
 		enemyInfo.setBackground(Color.white);
 		enemyInfo.setForeground(Color.black);
-		enemyInfo.append("{Enemy Stats: ]");
+		enemyInfo.append(enemy.toString());
 	}
 	
 	private void createInfoPanel() {
@@ -170,6 +190,13 @@ public class GameGui extends JFrame implements ActionListener{
 				"You have four sets of actions, each having their own effects that help you combat the various creatures that dares to stop you.");
 		info.setFont(font1);
 		info.setBackground(Color.white);
+	}
+	
+	private void createExitPanel() {
+		exitPanel.add(exitBtn);
+		exitBtn.setPreferredSize(btnSize);
+		exitBtn.setBackground(Color.white);
+		exitBtn.setForeground(Color.black);
 	}
 	
 	private void addPanelsToFrame() {
@@ -185,6 +212,7 @@ public class GameGui extends JFrame implements ActionListener{
 		option2.addActionListener(this);
 		option3.addActionListener(this);
 		option4.addActionListener(this);
+		exitBtn.addActionListener(this);
 	}
 
 	private void additonalSettings() {
@@ -208,6 +236,7 @@ public class GameGui extends JFrame implements ActionListener{
 		} else if (callingBtn.equals("Quit")) {
 			dispose();
 		} else if (callingBtn.equals("Ready!")) {
+			output.setText("");
 			menuPanel.setVisible(false);
 			prepPanel.setVisible(false);
 			newPanel.setVisible(true);
@@ -216,39 +245,182 @@ public class GameGui extends JFrame implements ActionListener{
 			textPanel.setVisible(true);
 			
 		} else if (callingBtn.equals("Stab")) {
-			menuPanel.setVisible(false);
-			prepPanel.setVisible(false);
-			newPanel.setVisible(true);
-			label1.setVisible(false);
-			textPanel.setVisible(true);
-			output.append("You did 8 damage \n");
+			damage = rand.nextInt(player.attackdmg);
+			taken = rand.nextInt(enemy.getDamage());
+			
+			output.append("You deal " + damage + " damage\n");
+			output.append("The enemy dealt " + taken + " to you\n");
+			
+			playerHealth -= taken;
+			enemyHealth -= damage;
+			
+			damage = 50;
+			enemyDamage = 20;
+			
+			player = new Player(playerHealth, damage, playerWeapon, playerClass);
+			enemy = new Enemy(enemyHealth, enemyWeapon, enemyDamage, enemyClass);
+			playerInfo.setText("");
+			enemyInfo.setText("");
+			playerInfo.append(player.toString());
+			enemyInfo.append(enemy.toString());
+			
+			if (playerHealth <= 0) {
+				playerHealth = 0;
+				player = new Player(playerHealth, damage, playerWeapon, playerClass);
+				playerInfo.setText("");
+				playerInfo.append(player.toString());
+				output.append("You are dead! Game over!");
+				newPanel.setVisible(false);
+				exitPanel.setVisible(true);
+			}
+			
+			else if (enemyHealth <= 0) {
+				enemyHealth = 0;
+				enemy = new Enemy(enemyHealth, enemyWeapon, enemyDamage, enemyClass);
+				output.append("You have defeated the enemy!\n");
+				enemyInfo.setText("");
+				enemyInfo.append(enemy.toString());
+				newPanel.setVisible(false);
+				exitPanel.setVisible(true);
+			}
+			
+			
+			
 		} else if (callingBtn.equals("Punch")) {
-			menuPanel.setVisible(false);
-			prepPanel.setVisible(false);
-			newPanel.setVisible(true);
-			label1.setVisible(false);
-			textPanel.setVisible(true);
-			output.append("You did 5 damage \n");
-		} else if (callingBtn.equals("Shoot")) {
-			menuPanel.setVisible(false);
-			prepPanel.setVisible(false);
-			newPanel.setVisible(true);
-			label1.setVisible(false);
-			textPanel.setVisible(true);
-			output.append("You did 3 damage \n");
+			damage = rand.nextInt(20);
+			taken = rand.nextInt(enemy.getDamage());
+			
+			output.append("You deal " + damage + " damage\n");
+			output.append("The enemy dealt " + taken + " to you\n");
+			
+			playerHealth -= taken;
+			enemyHealth -= damage;
+			
+			damage = 50;
+			enemyDamage = 20;
+			
+			player = new Player(playerHealth, damage, playerWeapon, playerClass);
+			enemy = new Enemy(enemyHealth, enemyWeapon, enemyDamage, enemyClass);
+			playerInfo.setText("");
+			enemyInfo.setText("");
+			playerInfo.append(player.toString());
+			enemyInfo.append(enemy.toString());
+			
+			if (playerHealth <= 0) {
+				playerHealth = 0;
+				player = new Player(playerHealth, damage, playerWeapon, playerClass);
+				output.append("You are dead! Game over!");
+				playerInfo.setText("");
+				playerInfo.append(player.toString());
+				newPanel.setVisible(false);
+				exitPanel.setVisible(true);
+			}
+			
+			else if (enemyHealth <= 0) {
+				enemyHealth = 0;
+				enemy = new Enemy(enemyHealth, enemyWeapon, enemyDamage, enemyClass);
+				output.append("You have defeated the enemy!\n");
+				enemyInfo.setText("");
+				enemyInfo.append(enemy.toString());
+				newPanel.setVisible(false);
+				exitPanel.setVisible(true);
+			}
+			
+		} else if (callingBtn.equals("Kick")) {
+			damage = rand.nextInt(10);
+			taken = rand.nextInt(enemy.getDamage());
+			
+			output.append("You deal " + damage + " damage\n");
+			output.append("The enemy dealt " + taken + " to you\n");
+			
+			playerHealth -= taken;
+			enemyHealth -= damage;
+			
+			damage = 50;
+			enemyDamage = 20;
+			
+			player = new Player(playerHealth, damage, playerWeapon, playerClass);
+			enemy = new Enemy(enemyHealth, enemyWeapon, enemyDamage, enemyClass);
+			playerInfo.setText("");
+			enemyInfo.setText("");
+			playerInfo.append(player.toString());
+			enemyInfo.append(enemy.toString());
+			
+			if (playerHealth <= 0) {
+				playerHealth = 0;
+				player = new Player(playerHealth, damage, playerWeapon, playerClass);
+				output.append("You are dead! Game over!");
+				playerInfo.setText("");
+				playerInfo.append(player.toString());
+				newPanel.setVisible(false);
+				exitPanel.setVisible(true);
+			}
+			
+			else if (enemyHealth <= 0) {
+				enemyHealth = 0;
+				enemy = new Enemy(enemyHealth, enemyWeapon, enemyDamage, enemyClass);
+				output.append("You have defeated the enemy!\n");
+				enemyInfo.setText("");
+				enemyInfo.append(enemy.toString());
+				newPanel.setVisible(false);
+				exitPanel.setVisible(true);
+			}
+			
 		} else if (callingBtn.equals("Guard")) {
-			menuPanel.setVisible(false);
-			prepPanel.setVisible(false);
-			newPanel.setVisible(true);
-			label1.setVisible(false);
-			textPanel.setVisible(true);
-			output.append("You took no damage \n");
+			damage = rand.nextInt(player.attackdmg);
+			taken = rand.nextInt(enemy.getDamage());
+			block = 10;
+			int diff = taken - block;
+			
+			if (taken > block) {
+				output.append("You block 10 damage\n");
+				output.append("But the enemy deals " + diff + " damage\n");
+				playerHealth -= diff;
+			}
+			
+			else {
+				output.append("You block " + taken + " damage\n");
+			}
+			
+			taken = 0;
+			
+			playerHealth -= taken;
+			enemyHealth -= damage;
+			
+			damage = 50;
+			enemyDamage = 20;
+			
+			player = new Player(playerHealth, damage, playerWeapon, playerClass);
+			enemy = new Enemy(enemyHealth, enemyWeapon, enemyDamage, enemyClass);
+			playerInfo.setText("");
+			enemyInfo.setText("");
+			playerInfo.append(player.toString());
+			enemyInfo.append(enemy.toString());
+			
+			if (playerHealth <= 0) {
+				playerHealth = 0;
+				player = new Player(playerHealth, damage, playerWeapon, playerClass);
+				output.append("You are dead! Game over!");
+				playerInfo.setText("");
+				playerInfo.append(player.toString());
+				newPanel.setVisible(false);
+				exitPanel.setVisible(true);
+			}
+			
+			else if (enemyHealth <= 0) {
+				enemyHealth = 0;
+				enemy = new Enemy(enemyHealth, enemyWeapon, enemyDamage, enemyClass);
+				output.append("You have defeated the enemy!\n");
+				enemyInfo.setText("");
+				enemyInfo.append(enemy.toString());
+				newPanel.setVisible(false);
+				exitPanel.setVisible(true);
+			}
+		}
+		
+		else if (callingBtn.equals("Exit")) {
+			System.exit(EXIT_ON_CLOSE);
 		}
 
-	}
-
-	public static void main(String[] args) {
-		GameGui game = new GameGui("GAME");
-		game.setVisible(true);
 	}
 }

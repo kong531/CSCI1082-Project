@@ -1,13 +1,17 @@
 package Assets;
 
-import java.awt.Component;
-
 public class Player {
-	private int health;
-	private int attackdmg;
-	private String weapon;
-	private String playerclass;
+	public int health;
+	public int attackdmg;
+	public String weapon;
+	public String playerclass;
 	
+	public Player() {
+		health = 100;
+		attackdmg = 50;
+		weapon = "Long Sword";
+		playerclass = "Warrior";
+	}
 	public Player (int health, int attackdmg, String weapon, String playerclass) {
 		this.health = health;
 		this.attackdmg = attackdmg;
@@ -52,10 +56,10 @@ public class Player {
 		
 		String playerInfo = "[Player's Stats]"
 						+ "\n------------------------------\n"
-						+ "\nHealth points: " + health
-						+ "\nWeapon type: " + weapon
-						+ "\nAttack power: " + attackdmg
-						+ "\nClass: " + playerclass;
+						+ "\nHealth points: " + this.health
+						+ "\nWeapon type: " + this.weapon
+						+ "\nAttack power: " + this.attackdmg
+						+ "\nClass: " + this.playerclass;
 		
 		return playerInfo;
 	}

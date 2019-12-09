@@ -2,13 +2,22 @@ package Assets;
 
 public class Enemy {
 	
-	private int health;
-	private String weapon;
-	private String enemyclass;
+	public int health;
+	public String weapon;
+	public int damage;
+	public String enemyclass;
 	
-	public Enemy (int health, String weapon, String playerclass) {
+	public Enemy() {
+		health = 200;
+		weapon = null;
+		damage = 10;
+		enemyclass = null;
+	}
+	
+	public Enemy (int health, String weapon, int damage, String playerclass) {
 		this.health = health;
 		this.weapon = weapon;
+		this.damage = damage;
 		this.enemyclass = playerclass;
 	}
 	
@@ -28,6 +37,13 @@ public class Enemy {
 		this.weapon = weapon;
 	}
 	
+	public int getDamage() {
+		return damage;
+	}
+	
+	public void setDamage(int damage) {
+		this.damage = damage;
+	}
 	public String getPlayerclass() {
 		return enemyclass;
 	}
@@ -41,9 +57,10 @@ public class Enemy {
 		
 		String playerInfo = "[Enemy's Stats]"
 						+ "\n------------------------------\n"
-						+ "Health points: " + health
-						+ "Weapon type: " + weapon
-						+ "Class: " + enemyclass;
+						+ "\nHealth points: " + this.health
+						+ "\nWeapon type: " + this.weapon
+						+ "\nDamage: " + this.damage
+						+ "\nClass: " + this.enemyclass;
 		
 		return playerInfo;
 	}
