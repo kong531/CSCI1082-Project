@@ -1,5 +1,7 @@
 package Assets;
 
+import java.awt.Component;
+
 public class Player {
 	private int health;
 	private int attackdmg;
@@ -48,12 +50,12 @@ public class Player {
 	@Override
 	public String toString() {
 		
-		String playerInfo = "\n[Player's Stats]"
+		String playerInfo = "[Player's Stats]"
 						+ "\n------------------------------\n"
-						+ "Health points: " + health
-						+ "Weapon type: " + weapon
-						+ "Attack power: " + attackdmg
-						+ "Class: " + playerclass;
+						+ "\nHealth points: " + health
+						+ "\nWeapon type: " + weapon
+						+ "\nAttack power: " + attackdmg
+						+ "\nClass: " + playerclass;
 		
 		return playerInfo;
 	}
