@@ -16,13 +16,14 @@ import javax.swing.JTextArea;
 
 public class GameGui extends JFrame implements ActionListener{
 	
-	private JLabel label1 = new JLabel("1v1 Sim");
+	private JLabel label1 = new JLabel("Dungeon Battle");
 
 	private Font font = new Font("", Font.BOLD, 50);
 	private Font font1 = new Font("", Font.BOLD, 40);
 
 	private JButton startBtn = new JButton("Start");
-	private JButton btn1 = new JButton("Fight!");  
+	private JButton quitBtn = new JButton("Quit");
+	private JButton readyBtn = new JButton("Ready!");
 	private JButton option1 = new JButton("Stab");
 	private JButton option2 = new JButton("Punch");
 	private JButton option3 = new JButton("Shoot");
@@ -32,20 +33,23 @@ public class GameGui extends JFrame implements ActionListener{
 
 	private JPanel topPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
 	private JPanel botPanel = new JPanel();
-	private JPanel optionPanel = new JPanel(new GridLayout(4, 1));
+	private JPanel menuPanel = new JPanel(new GridLayout(4, 1));
 	private JPanel newPanel = new JPanel(new GridLayout(2, 2));
 	private JPanel textPanel = new JPanel(new GridLayout(1, 2));
+	private JPanel prepPanel = new JPanel(new GridLayout(2, 1));
 
 	public GameGui(String title) {
 		super(title);
-		setSize(1000, 700);
+		setSize(800, 600);
+		setLayout(new GridLayout(2, 1));
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setVisible(true);
 		createTopPanel();
-		createOptionPanel();
+		createMenuPanel();
 		createNewPanel();
 		createBotPanel();
 		createTextPanel();
+		createPrepPanel();
 		addPanelsToFrame();
 		additonalSettings();
 		addActionListeners();
@@ -64,17 +68,29 @@ public class GameGui extends JFrame implements ActionListener{
 
 	private void createBotPanel() {
 		botPanel.setBackground(Color.black);
-		botPanel.add(optionPanel);
+		botPanel.add(menuPanel);
 		botPanel.add(newPanel);
+		botPanel.add(prepPanel);
 		newPanel.setVisible(false);
+		prepPanel.setVisible(false);
+	}
+	
+	private void createPrepPanel() {
+		prepPanel.setBackground(Color.black);
+		prepPanel.add(readyBtn);
+		newPanel.setVisible(false);
+		
 	}
 
-	private void createOptionPanel() {
-		optionPanel.setBackground(Color.black);
-		optionPanel.setBounds(500, 550, 300, 100);
-		optionPanel.add(btn1);
-		btn1.setBackground(Color.black);
-		btn1.setForeground(Color.white);
+	private void createMenuPanel() {
+		menuPanel.setBackground(Color.black);
+		menuPanel.setBounds(500, 550, 300, 100);
+		menuPanel.add(startBtn);
+		menuPanel.add(quitBtn);
+		startBtn.setBackground(Color.black);
+		startBtn.setForeground(Color.white);
+		quitBtn.setBackground(Color.black);
+		quitBtn.setForeground(Color.white);
 	}
 
 	private void createNewPanel() {
@@ -96,7 +112,8 @@ public class GameGui extends JFrame implements ActionListener{
 
 	private void addActionListeners() {
 		startBtn.addActionListener(this);
-		btn1.addActionListener(this);
+		quitBtn.addActionListener(this);
+		readyBtn.addActionListener(this);
 		option1.addActionListener(this);
 		option2.addActionListener(this);
 		option3.addActionListener(this);
@@ -112,33 +129,47 @@ public class GameGui extends JFrame implements ActionListener{
 	public void actionPerformed(ActionEvent e) {
 		String callingBtn = e.getActionCommand();
 
-		if (callingBtn.equals("Fight!")) {
+		if (callingBtn.equals("Start")) {
 			topPanel.setBackground(Color.white);
-			optionPanel.setVisible(false);
-			newPanel.setVisible(true);
+			menuPanel.setVisible(false);
+			prepPanel.setVisible(true);
+			newPanel.setVisible(false);
 			label1.setVisible(false);
 			textPanel.setVisible(true);
 			setLayout(new GridLayout(2, 2));
+		} else if (callingBtn.equals("Quit")) {
+			dispose();
+		} else if (callingBtn.equals("Ready!")) {
+			menuPanel.setVisible(false);
+			prepPanel.setVisible(false);
+			newPanel.setVisible(true);
+			label1.setVisible(false);
+			textPanel.setVisible(true);
+			
 		} else if (callingBtn.equals("Stab")) {
-			optionPanel.setVisible(false);
+			menuPanel.setVisible(false);
+			prepPanel.setVisible(false);
 			newPanel.setVisible(true);
 			label1.setVisible(false);
 			textPanel.setVisible(true);
 			output.append("You did 8 damage \n");
 		} else if (callingBtn.equals("Punch")) {
-			optionPanel.setVisible(false);
+			menuPanel.setVisible(false);
+			prepPanel.setVisible(false);
 			newPanel.setVisible(true);
 			label1.setVisible(false);
 			textPanel.setVisible(true);
 			output.append("You did 5 damage \n");
 		} else if (callingBtn.equals("Shoot")) {
-			optionPanel.setVisible(false);
+			menuPanel.setVisible(false);
+			prepPanel.setVisible(false);
 			newPanel.setVisible(true);
 			label1.setVisible(false);
 			textPanel.setVisible(true);
 			output.append("You did 3 damage \n");
 		} else if (callingBtn.equals("Guard")) {
-			optionPanel.setVisible(false);
+			menuPanel.setVisible(false);
+			prepPanel.setVisible(false);
 			newPanel.setVisible(true);
 			label1.setVisible(false);
 			textPanel.setVisible(true);
